@@ -41,7 +41,7 @@ check_parallel() {
   # Results
   for host in "${HOSTS[@]}"; do
     (
-      result=$(timeout 2 ${_DIG} @${host} ${NS} +short)
+      result=$(timeout 2 ${_DIG} "@${host}" ${NS} +short)
       if [ -z "$result" ]; then
         echo -e "${border_color}│${padding}${reset_color}DNS IP: ${host}${reset_color}"
         echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
