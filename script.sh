@@ -9,20 +9,16 @@ function endscript() {
 trap endscript 2 15
 
 # Your DNSTT Nameservers & your Domain A Record
-NS1='sdns.myudp.elcavlaw.com'
-NS2='sdns.myudp1.elcavlaw.com'
-NS3='sdns.myudp2.elcavlaw.com'
-NS4='sdns.myudph.elcavlaw.com'
+declare -a NAMESERVERS=('sdns.myudp.elcavlaw.com' 'sdns.myudp1.elcavlaw.com' 'sdns.myudp2.elcavlaw.com' 'sdns.myudph.elcavlaw.com')
 declare -a HOSTS=('124.6.181.4')
 
 LOOP_DELAY=4
+
 echo -e "\e[1;37mCurrent loop delay is \e[1;33m${LOOP_DELAY}\e[1;37m seconds.\e[0m"
-echo -e "\e[1;37mWould you like to change the loop delay? \e[1;36m[y/n]:\e[0m "
-read -r change_delay
+read -p "Would you like to change the loop delay? [y/n]: " change_delay
 
 if [[ "$change_delay" == "y" ]]; then
-  echo -e "\e[1;37mEnter custom loop delay in seconds \e[1;33m(5-15):\e[0m "
-  read -r custom_delay
+  read -p "Enter custom loop delay in seconds (5-15): " custom_delay
   if [[ "$custom_delay" =~ ^[5-9]$|^1[0-5]$ ]]; then
     LOOP_DELAY=$custom_delay
   else
@@ -31,20 +27,22 @@ if [[ "$change_delay" == "y" ]]; then
 fi
 
 DIG_EXEC="DEFAULT"
-CUSTOM_DIG=/data/data/com.termux/files/home/go/bin/fastdig
+CUSTOM_DIG="/data/data/com.termux/files/home/go/bin/fastdig"
 VER=0.3
+
+_DIG=""
 
 case "${DIG_EXEC}" in
   DEFAULT|D)
-    _DIG="$(command -v dig)"
+    _DIG="dig"
     ;;
   CUSTOM|C)
     _DIG="${CUSTOM_DIG}"
     ;;
 esac
 
-if [ ! $(command -v ${_DIG}) ]; then
-  printf "%b" "Dig command failed to run, please install dig(dnsutils) or check the DIG_EXEC & CUSTOM_DIG variable.\n" && exit 1
+if ! command -v "${_DIG}" &>/dev/null; then
+  printf "%b" "Dig command failed to run. Please install dig (dnsutils) or check the DIG_EXEC & CUSTOM_DIG variable.\n" && exit 1
 fi
 
 # Initialize the counter
@@ -67,14 +65,14 @@ check() {
   # Perform asynchronous DNS queries
   for T in "${HOSTS[@]}"; do
     (
-      result=$(${_DIG} @${T} "${NS1}" "${NS2}" "${NS3}" "${NS4}" +short)
+      result=$(${_DIG} +short @"${T}" "${NAMESERVERS[@]}")
       if [ -z "$result" ]; then
         STATUS="${fail_color}Failed${reset_color}"
       else
         STATUS="${success_color}Success${reset_color}"
       fi
       echo -e "${border_color}│${padding}${reset_color}DNS IP: ${T}${reset_color}"
-      for NS in "${HOSTS[@]}"; do
+      for NS in "${NAMESERVERS[@]}"; do
         echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
       done
       echo -e "${border_color}│${padding}Status: ${STATUS}${reset_color}"
@@ -94,7 +92,7 @@ check() {
 
 # Countdown function
 countdown() {
-    for i in {6..1}; do
+    for i in {3..1}; do
         echo "Checking will start in $i seconds..."
         sleep 1
     done
