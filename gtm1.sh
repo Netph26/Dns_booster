@@ -7,8 +7,8 @@
 ## run command: ./globe-killfreenet3.sh l
 
 ## Your DNSTT Nameserver & your Domain `A` Record
-NS='ns.james.palaboy.tech'
-A='james.palaboy.tech'
+NS='sdns.myudph.elcavlaw.com'
+A='myudph.elcavlaw.com'
 ## Repeat dig cmd loop time (seconds) (positive integer only)
 LOOP_DELAY=5
 
