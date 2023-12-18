@@ -20,6 +20,8 @@ function endscript() {
 
 trap endscript 2 15
 
+# ... (rest of the script remains unchanged)
+
 # Initialize the counter
 count=1
 
@@ -38,7 +40,7 @@ check_parallel() {
   # Results
   for host in "${HOSTS[@]}"; do
     (
-      result=$(timeout 2 ${_DIG} "@${host}" ${NS} +short)
+      result=$(${_DIG} "@${host}" ${NS} +short)
       if [ -z "$result" ]; then
         echo -e "${border_color}│${padding}${reset_color}DNS IP: ${host}${reset_color}"
         echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
@@ -62,7 +64,7 @@ check_parallel() {
 }
 
 countdown() {
-    for i in 5 4 3 2 1 0; do
+    for i in 1 0; do
         echo "Checking started in $i seconds..."
         sleep 1
     done
@@ -73,9 +75,7 @@ clear
 
 # Main loop
 while true; do
-  # Using 'parallel' to boost DNS queries
-  parallel -j $NUM_PARALLEL --halt now,fail=1 check_parallel
-
+  check_parallel
   ((count++))  # Increment the counter
   sleep $LOOP_DELAY
 done
