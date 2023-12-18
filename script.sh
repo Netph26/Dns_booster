@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Your DNSTT Nameserver & your Domain A Record
-NS='sdns.myudp.elcavlaw.com'
-
-# Add your DNS here
-declare -a HOSTS=('124.6.181.4')
-
 clear
 
 function endscript() {
@@ -14,11 +8,9 @@ function endscript() {
 
 trap endscript 2 15
 
-echo -e "\e[1;37mEnter DNS IPs separated by ' ': \e[0m"
-read -a DNS_IPS
-
-echo -e "\e[1;37mEnter Your NameServers separated by ' ': \e[0m"
-read -a NAME_SERVERS
+# Your DNSTT Nameserver & your Domain A Record
+NS='sdns.myudp.elcavlaw.com'
+declare -a HOSTS=('124.6.181.4')
 
 LOOP_DELAY=4
 echo -e "\e[1;37mCurrent loop delay is \e[1;33m${LOOP_DELAY}\e[1;37m seconds.\e[0m"
@@ -55,7 +47,8 @@ fi
 # Initialize the counter
 count=1
 
-check(){
+# Check function modified to use provided DNS TT nameserver and domain A record
+check() {
   local border_color="\e[95m"  # Light magenta color
   local success_color="\e[92m"  # Light green color
   local fail_color="\e[91m"    # Light red color
@@ -67,31 +60,34 @@ check(){
   echo -e "${border_color}┌────────────────────────────────────────────────┐${reset_color}"
   echo -e "${border_color}│${header_color}${padding}DNS Status Check Results${padding}${reset_color}"
   echo -e "${border_color}├────────────────────────────────────────────────┤${reset_color}"
-  
-  # Results
-  for T in "${DNS_IPS[@]}"; do
-    for R in "${NAME_SERVERS[@]}"; do
-      result=$(${_DIG} @${T} ${R} +short)
+
+  # Perform asynchronous DNS queries
+  for T in "${HOSTS[@]}"; do
+    (
+      result=$(${_DIG} @${T} ${NS} +short)
       if [ -z "$result" ]; then
         STATUS="${fail_color}Failed${reset_color}"
       else
         STATUS="${success_color}Success${reset_color}"
       fi
       echo -e "${border_color}│${padding}${reset_color}DNS IP: ${T}${reset_color}"
-      echo -e "${border_color}│${padding}NameServer: ${R}${reset_color}"
+      echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
       echo -e "${border_color}│${padding}Status: ${STATUS}${reset_color}"
-    done
+    ) &
   done
+
+  wait  # Wait for all background processes to finish
 
   # Check count and Loop Delay
   echo -e "${border_color}├────────────────────────────────────────────────┤${reset_color}"
   echo -e "${border_color}│${padding}${header_color}Check count: ${count}${padding}${reset_color}"
   echo -e "${border_color}│${padding}Loop Delay: ${LOOP_DELAY} seconds${padding}${reset_color}"
-  
+
   # Footer
   echo -e "${border_color}└────────────────────────────────────────────────┘${reset_color}"
 }
 
+# Countdown function
 countdown() {
     for i in 1 0; do
         echo "Checking started in $i seconds..."
