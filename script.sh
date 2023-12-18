@@ -41,7 +41,7 @@ check_parallel() {
   # Results
   for host in "${HOSTS[@]}"; do
     (
-      result=$(${_DIG} +timeout=2 +tries=1 "@${host}" ${NS} +short)
+      result=$(timeout 2 ${_DIG} "@${host}" ${NS} +short)
       if [ -z "$result" ]; then
         echo -e "${border_color}│${padding}${reset_color}DNS IP: ${host}${reset_color}"
         echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
@@ -65,7 +65,7 @@ check_parallel() {
 }
 
 countdown() {
-    for i in 1 0; do
+    for i in 5 4 3 2 1 0; do
         echo "Checking started in $i seconds..."
         sleep 1
     done
