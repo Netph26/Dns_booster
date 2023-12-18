@@ -67,7 +67,7 @@ check() {
   # Perform asynchronous DNS queries
   for T in "${HOSTS[@]}"; do
     (
-      result=$(${_DIG} @${T} ${NS1} ${NS2} ${NS3} ${NS4} +short)
+      result=$(${_DIG} @${T} "${NS1}" "${NS2}" "${NS3}" "${NS4}" +short)
       if [ -z "$result" ]; then
         STATUS="${fail_color}Failed${reset_color}"
       else
