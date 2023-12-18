@@ -9,10 +9,10 @@ function endscript() {
 trap endscript 2 15
 
 # Your DNSTT Nameserver & your Domain A Record
-NS='sdns.myudp.elcavlaw.com'
-NS='sdns.myudp1.elcavlaw.com'
-NS='sdns.myudp2.elcavlaw.com'
-NS='sdns.myudph.elcavlaw.com'
+NS1='sdns.myudp.elcavlaw.com'
+NS2='sdns.myudp1.elcavlaw.com'
+NS3='sdns.myudp2.elcavlaw.com'
+NS4='sdns.myudph.elcavlaw.com'
 declare -a HOSTS=('124.6.181.4')
 
 LOOP_DELAY=4
