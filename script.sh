@@ -74,7 +74,9 @@ check() {
         STATUS="${success_color}Success${reset_color}"
       fi
       echo -e "${border_color}│${padding}${reset_color}DNS IP: ${T}${reset_color}"
-      echo -e "${border_color}│${padding}NameServer: ${NS1}${reset_color}"
+      for NS in "${HOSTS[@]}"; do
+        echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
+      done
       echo -e "${border_color}│${padding}Status: ${STATUS}${reset_color}"
     ) &
   done
@@ -92,7 +94,7 @@ check() {
 
 # Countdown function
 countdown() {
-    for i in {3..1}; do
+    for i in {6..1}; do
         echo "Checking will start in $i seconds..."
         sleep 1
     done
