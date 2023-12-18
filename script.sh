@@ -62,7 +62,7 @@ check_parallel() {
 }
 
 countdown() {
-    for i in 1 0; do
+    for i in 5 4 3 2 1 0; do
         echo "Checking started in $i seconds..."
         sleep 1
     done
