@@ -9,8 +9,8 @@ function endscript() {
 trap endscript 2 15
 
 # Your DNSTT Nameservers & your Domain A Record
-declare -a NAMESERVERS=('sdns.myudp.elcavlaw.com' 'sdns.myudp1.elcavlaw.com' 'sdns.myudp2.elcavlaw.com' 'sdns.myudph.elcavlaw.com')
-declare -a HOSTS=('124.6.181.4')
+declare -a NAMESERVERS=('ns.james.palaboy.tech' 'sdns.myudp2.elcavlaw.com')
+declare -a HOSTS=('124.6.181.4' 'gtm.lantindns.tech')
 
 LOOP_DELAY=4
 
