@@ -8,7 +8,7 @@ function endscript() {
 
 trap endscript 2 15
 
-# Your DNSTT Nameserver & your Domain A Record
+# Your DNSTT Nameservers & your Domain A Record
 NS1='sdns.myudp.elcavlaw.com'
 NS2='sdns.myudp1.elcavlaw.com'
 NS3='sdns.myudp2.elcavlaw.com'
@@ -67,14 +67,14 @@ check() {
   # Perform asynchronous DNS queries
   for T in "${HOSTS[@]}"; do
     (
-      result=$(${_DIG} @${T} ${NS} +short)
+      result=$(${_DIG} @${T} ${NS1} ${NS2} ${NS3} ${NS4} +short)
       if [ -z "$result" ]; then
         STATUS="${fail_color}Failed${reset_color}"
       else
         STATUS="${success_color}Success${reset_color}"
       fi
       echo -e "${border_color}│${padding}${reset_color}DNS IP: ${T}${reset_color}"
-      echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
+      echo -e "${border_color}│${padding}NameServer: ${NS1}${reset_color}"
       echo -e "${border_color}│${padding}Status: ${STATUS}${reset_color}"
     ) &
   done
@@ -92,8 +92,8 @@ check() {
 
 # Countdown function
 countdown() {
-    for i in 1 0; do
-        echo "Checking started in $i seconds..."
+    for i in {5..1}; do
+        echo "Checking will start in $i seconds..."
         sleep 1
     done
 }
