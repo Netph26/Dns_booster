@@ -92,7 +92,7 @@ check() {
 
 # Countdown function
 countdown() {
-    for i in {5..1}; do
+    for i in {3..1}; do
         echo "Checking will start in $i seconds..."
         sleep 1
     done
