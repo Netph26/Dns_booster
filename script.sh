@@ -39,7 +39,21 @@ check_parallel() {
   echo -e "${border_color}├────────────────────────────────────────────────┤${reset_color}"
   
   # Results
-  parallel --delay 0.1 --jobs ${NUM_PARALLEL} check_parallel ::: "${HOSTS[@]}"
+  for host in "${HOSTS[@]}"; do
+    (
+      result=$(timeout 2 ${_DIG} @${host} ${NS} +short)
+      if [ -z "$result" ]; then
+        echo -e "${border_color}│${padding}${reset_color}DNS IP: ${host}${reset_color}"
+        echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
+        echo -e "${border_color}│${padding}Status: ${fail_color}Failed${reset_color}"
+      else
+        echo -e "${border_color}│${padding}${reset_color}DNS IP: ${host}${reset_color}"
+        echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
+        echo -e "${border_color}│${padding}Status: ${success_color}Success${reset_color}"
+      fi
+    ) &
+  done
+  wait
 
   # Check count and Loop Delay
   echo -e "${border_color}├────────────────────────────────────────────────┤${reset_color}"
