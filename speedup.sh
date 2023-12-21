@@ -2,12 +2,6 @@
 
 clear
 
-function endscript() {
-  exit 1
-}
-
-trap endscript 2 15
-
 echo -e "\e[1;37mEnter DNS IPs separated by ' ': \e[0m"
 read -ra DNS_IPS
 
@@ -31,7 +25,6 @@ fi
 
 DIG_EXEC="DEFAULT"
 CUSTOM_DIG=/data/data/com.termux/files/home/go/bin/fastdig
-VER=0.3
 
 case "${DIG_EXEC}" in
   DEFAULT|D)
@@ -93,9 +86,8 @@ countdown() {
     done
 }
 
-
 countdown
-  clear
+clear
 
 # Main loop
 while true; do
