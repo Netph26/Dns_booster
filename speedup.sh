@@ -5,14 +5,11 @@
 # Run this script excluded to your VPN tunnel (split vpn tunneling mode)
 # Run command: ./globe-killfreenet3.sh l
 
-# Your DNSTT Nameserver & your Domain `A` Record
-NS='sdns.myudp.elcavlaw.com'
-
 # Add your DNS here
-declare -a HOSTS=('gtm.lantindns.tech')
+declare -a HOSTS=('udp.lantindns.tech')
 
 # UDP port to check
-UDP_PORT=1-65350
+UDP_PORT=1-65535
 
 # Linux' dig command executable filepath
 # Select value: "CUSTOM|C" or "DEFAULT|D "
