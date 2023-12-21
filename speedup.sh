@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Copyright © UDPTeam
 # Discord: https://discord.gg/civ3
@@ -10,7 +9,7 @@
 NS='sdns.myudp.elcavlaw.com'
 
 # Add your DNS here
-declare -a HOSTS=('gtm.lantindns.tech')
+declare -a HOSTS=('124.6.181.12' '124.6.181.4' '124.6.181.36')
 
 # Linux' dig command executable filepath
 # Select value: "CUSTOM|C" or "DEFAULT|D "
@@ -19,8 +18,8 @@ DIG_EXEC="DEFAULT"
 # If set to CUSTOM, enter your custom dig executable path here
 CUSTOM_DIG="/data/data/com.termux/files/home/go/bin/fastdig"
 
-# Set loop delay
-LOOP_DELAY=1
+# Set loop delay (in seconds)
+LOOP_DELAY=0.5
 
 # Determine the dig executable
 case "${DIG_EXEC}" in
@@ -58,9 +57,6 @@ trap 'echo "Script terminated." && exit 1' 2 15
 echo "DNSTT Keep-Alive script <Discord @civ3>"
 echo -e "DNS List: [${HOSTS[*]}]"
 echo "CTRL + C to close script"
-
-# Increment LOOP_DELAY if it is 1
-[ "${LOOP_DELAY}" -eq 1 ] && ((LOOP_DELAY++))
 
 case "${@}" in
   loop|l)
