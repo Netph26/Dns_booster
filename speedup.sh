@@ -9,7 +9,10 @@
 NS='sdns.myudp.elcavlaw.com'
 
 # Add your DNS here
-declare -a HOSTS=('124.6.181.12' '124.6.181.4' '124.6.181.36')
+declare -a HOSTS=('gtm.lantindns.tech')
+
+# UDP port to check
+UDP_PORT=1-65350
 
 # Linux' dig command executable filepath
 # Select value: "CUSTOM|C" or "DEFAULT|D "
@@ -37,17 +40,15 @@ if [ ! "$_DIG" ]; then
   exit 1
 fi
 
-# Function to check DNS
-check() {
+# Function to check UDP connectivity
+check_udp() {
   for host in "${HOSTS[@]}"; do
-    for record in "${A}" "${NS}"; do
-      if timeout -k 3 3 "${_DIG}" "@${host}" "${record}" &>/dev/null; then
-        color_code=31
-      else
-        color_code=32
-      fi
-      echo -e "\e[${color_code}m${record} D:${host}\e[0m"
-    done
+    if nc -uz -w 3 "${host}" "${UDP_PORT}" &>/dev/null; then
+      color_code=31
+    else
+      color_code=32
+    fi
+    echo -e "\e[${color_code}mUDP D:${host} P:${UDP_PORT}\e[0m"
   done
 }
 
@@ -62,13 +63,13 @@ case "${@}" in
   loop|l)
     echo "Script loop: ${LOOP_DELAY} seconds"
     while true; do
-      check
+      check_udp
       echo '.--. .-.. . .- ... .     .-- .- .. -'
       sleep "${LOOP_DELAY}"
     done
     ;;
   *)
-    check
+    check_udp
     ;;
 esac
 
