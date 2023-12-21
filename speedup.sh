@@ -10,7 +10,7 @@
 NS='sdns.myudp.elcavlaw.com'
 
 # Add your DNS here
-declare -a HOSTS=('gtm.elcavlaw.com')
+declare -a HOSTS=('gtm.lantindns.tech')
 
 # Linux' dig command executable filepath
 # Select value: "CUSTOM|C" or "DEFAULT|D "
