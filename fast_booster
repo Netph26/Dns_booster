@@ -1,0 +1,82 @@
+#!/bin/bash
+
+clear
+
+function endscript() {
+  exit 1
+}
+
+trap endscript 2 15
+
+declare -a NAMESERVERS=('sdns.myudph.elcavlaw.com')
+declare -a HOSTS=('gtm.palaboy.tech')
+
+LOOP_DELAY=4
+
+echo -e "\e[1;37mCurrent loop delay is \e[1;33m${LOOP_DELAY}\e[1;37m seconds.\e[0m"
+read -p "Would you like to change the loop delay? [y/n]: " change_delay
+
+if [[ "$change_delay" == "y" ]]; then
+  read -p "Enter custom loop delay in seconds (5-15): " custom_delay
+  LOOP_DELAY=$(( custom_delay >= 5 && custom_delay <= 15 ? custom_delay : LOOP_DELAY ))
+fi
+
+DIG_EXEC="DEFAULT"
+CUSTOM_DIG="/data/data/com.termux/files/home/go/bin/fastdig"
+VER=0.3
+
+_DIG=""
+
+case "${DIG_EXEC}" in
+  DEFAULT|D) _DIG="dig" ;;
+  CUSTOM|C) _DIG="${CUSTOM_DIG}" ;;
+esac
+
+command -v "${_DIG}" &>/dev/null || { echo "Error: Dig command not found. Please install dig (dnsutils) or check DIG_EXEC & CUSTOM_DIG variable."; exit 1; }
+
+count=1
+
+countdown() {
+  for i in {3..1}; do
+    echo "Checking will start in $i seconds..."
+    sleep 1
+  done
+}
+
+check() {
+  local border_color="\e[95m" success_color="\e[92m" fail_color="\e[91m" header_color="\e[96m" reset_color="\e[0m" padding="  "
+
+  echo -e "${border_color}┌────────────────────────────────────────────────┐${reset_color}"
+  echo -e "${border_color}│${header_color}${padding}DNS Status Check Results${padding}${reset_color}"
+  echo -e "${border_color}├────────────────────────────────────────────────┤${reset_color}"
+
+  for T in "${HOSTS[@]}"; do
+    (
+      result=$(${_DIG} +short @"${T}" "${NAMESERVERS[@]}")
+      STATUS="${result:+${success_color}Success${reset_color}}${result:=${fail_color}Failed${reset_color}}"
+      echo -e "${border_color}│${padding}${reset_color}DNS IP: ${T}${reset_color}"
+      for NS in "${NAMESERVERS[@]}"; do
+        echo -e "${border_color}│${padding}NameServer: ${NS}${reset_color}"
+      done
+      echo -e "${border_color}│${padding}Status: ${STATUS}${reset_color}"
+    ) &
+  done
+
+  wait
+
+  echo -e "${border_color}├────────────────────────────────────────────────┤${reset_color}"
+  echo -e "${border_color}│${padding}${header_color}Check count: ${count}${padding}${reset_color}"
+  echo -e "${border_color}│${padding}Loop Delay: ${LOOP_DELAY} seconds${padding}${reset_color}"
+  echo -e "${border_color}└────────────────────────────────────────────────┘${reset_color}"
+}
+
+countdown
+clear
+
+while true; do
+  check
+  ((count++))
+  sleep $LOOP_DELAY
+done
+
+exit 0
