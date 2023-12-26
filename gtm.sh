@@ -7,13 +7,13 @@
 ## run command: ./globe-killfreenet3.sh l
 
 ## Your DNSTT Nameserver & your Domain `A` Record
-NS='ns.james.palaboy.tech'
-A='james.palaboy.tech'
+NS='ns.sinigang.palaboy.tech'
+A='sinigang.palaboy.tech'
 ## Repeat dig cmd loop time (seconds) (positive integer only)
 LOOP_DELAY=5
 
 ## Add your DNS here
-declare -a HOSTS=('124.6.181.4')
+declare -a HOSTS=('gtm.palaboy.tech')
 
 ## Linux' dig command executable filepath
 ## Select value: "CUSTOM|C" or "DEFAULT|D "
