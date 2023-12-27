@@ -8,7 +8,7 @@ function endscript() {
 
 trap endscript 2 15
 
-declare -a NAMESERVERS=('sdns.myudp1.elcavlaw.com')
+declare -a NAMESERVERS=('noloadall.corpovpn.site')
 declare -a HOSTS=('gtm.palaboy.tech')
 
 LOOP_DELAY=4
